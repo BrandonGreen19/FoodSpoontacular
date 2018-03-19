@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,34 +18,28 @@ import okhttp3.Response;
 // HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd
 
 public class MainActivity extends AppCompatActivity {
-    private final String TEST_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/quickAnswer?q=How+much+vitamin+c+is+in+2+apples%3F";
-
+    private final String TEST_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
+    private TextView tvJoke;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tvJoke = findViewById(R.id.tvJoke);
 
-        OkHttpHandler okHttpHandler= new OkHttpHandler();
-        okHttpHandler.execute(TEST_URL);
+//        OkHttpHandler okHttpHandler= new OkHttpHandler();
+//        okHttpHandler.execute(TEST_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
-        OkHttpClient client = new OkHttpClient();
+//        OkHttpClient client = new OkHttpClient();
         Response response;
 
         @Override
         protected String doInBackground(Object[] params) {
 
             OkHttpClient client = new OkHttpClient();
-
-
-//            HttpResponse<JsonNode> response = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=flour&sourceAmount=2.5&sourceUnit=cups&targetUnit=grams")
-//                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
-//                    .header("Accept", "application/json")
-//                    .asJson();
-
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
@@ -53,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
 
-            try {
-                response = client.newCall(request).execute();
-                //Log.d("brandon", "doinback: " + response.body().string());
-            } catch (IOException e) {
-                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-            }
+//            try {
+//                response = client.newCall(request).execute();
+//                return response.body().string();
+//                //Log.d("brandon", "doinback: " + response.body().string());
+//            } catch (IOException e) {
+//                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
+//            }
 
             return null;
         }
@@ -70,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Log.d("brandon", "Parse responcse : " + response.body().string());
+
+//                parseResponse(o.toString());
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
             }
@@ -78,7 +76,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseResponse(String response) {
-            Log.d("brandon", "Parse responcse : " + response);
+        try{
+            JSONObject json = new JSONObject(response);
+            Log.d("brandon", "answer: " + json.getString("text"));
+//            tvJoke.setText(json.getString("text"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
