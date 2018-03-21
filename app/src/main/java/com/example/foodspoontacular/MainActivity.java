@@ -1,9 +1,13 @@
 package com.example.foodspoontacular;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -19,7 +23,11 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private final String TEST_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
+    private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
+    private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
     private TextView tvJoke;
+    private EditText etQuery;
+    private Button btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +35,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvJoke = findViewById(R.id.tvJoke);
+        etQuery = findViewById(R.id.etQuery);
+        btnSearch = findViewById(R.id.btnSearch);
 
-//        OkHttpHandler okHttpHandler= new OkHttpHandler();
-//        okHttpHandler.execute(TEST_URL);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queryUrl += etQuery.getText();
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                intent.putExtra("query", queryUrl);
+                startActivityForResult(intent, 0);
+            }
+        });
+
+
+        OkHttpHandler okHttpHandler= new OkHttpHandler();
+        okHttpHandler.execute(TEST_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
-//        OkHttpClient client = new OkHttpClient();
+        //        OkHttpClient client = new OkHttpClient();
         Response response;
 
         @Override
@@ -48,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
 
-//            try {
-//                response = client.newCall(request).execute();
-//                return response.body().string();
-//                //Log.d("brandon", "doinback: " + response.body().string());
-//            } catch (IOException e) {
-//                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-//            }
+            try {
+                response = client.newCall(request).execute();
+                return response.body().string();
+                //Log.d("brandon", "doinback: " + response.body().string());
+            } catch (IOException e) {
+                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
+            }
 
             return null;
         }
@@ -67,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Log.d("brandon", "Parse responcse : " + response.body().string());
 
-//                parseResponse(o.toString());
+                parseResponse(o.toString());
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
             }
@@ -79,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             JSONObject json = new JSONObject(response);
             Log.d("brandon", "answer: " + json.getString("text"));
-//            tvJoke.setText(json.getString("text"));
+            tvJoke.setText(json.getString("text"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
