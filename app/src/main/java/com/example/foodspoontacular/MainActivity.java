@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
                 queryUrl += etQuery.getText();
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 intent.putExtra("query", queryUrl);
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
-        okHttpHandler.execute(TEST_URL);
+        //okHttpHandler.execute(TEST_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("brandon", "doinback: " + response.body().string());
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
+
             }
 
             return null;

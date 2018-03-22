@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,11 +43,9 @@ public class ListActivity extends AppCompatActivity {
         Intent i = getIntent();
         String query = i.getStringExtra("query");
 
-        recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
         listView = findViewById(R.id.nice_listview);
-        listView.setAdapter(recipeAdapter);
-
         recipes = new ArrayList<Recipe>();
+        recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
         listView.setAdapter(recipeAdapter);
         okHttpHandler.execute(query);
 
@@ -67,6 +67,7 @@ public class ListActivity extends AppCompatActivity {
             View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.list_item, null);
             }
             Recipe o = recipes.get(position);
             if (o != null) {
@@ -135,7 +136,7 @@ public class ListActivity extends AppCompatActivity {
 
             try {
                 response = client.newCall(request).execute();
-                Log.d("brandon", "doinback: " + response.body().string());
+                //Log.d("brandon", "doinback: " + response.body().string());
                 return response.body().string();
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
@@ -149,13 +150,21 @@ public class ListActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            try {
-                Log.d("brandon", "Parse responcse : " + response.body().string());
+            listView = findViewById(R.id.nice_listview);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(ListActivity.this, DetailActivity.class);
+                    intent.putExtra("title", recipeAdapter.getItem(position).title);
+                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
+                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
+                    intent.putExtra("id", recipeAdapter.getItem(position).getId());
+                    startActivityForResult(intent, 0);
+                }
+            });
 
-//                parseResponse(o.toString());
-            } catch (IOException e) {
-                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-            }
+            parseResponse(o.toString());
+            listView.setAdapter(recipeAdapter);
 
         }
     }
@@ -163,8 +172,29 @@ public class ListActivity extends AppCompatActivity {
     private void parseResponse(String response) {
         try{
             JSONObject json = new JSONObject(response);
-            Log.d("brandon", "answer: " + json.getString("text"));
-//            tvJoke.setText(json.getString("text"));
+            JSONArray jsonResults = json.getJSONArray("results");
+//            Log.d("brandon", "answer: " + jsonResults.get);
+            recipes = new ArrayList<Recipe>();
+
+            for (int i=0;i<jsonResults.length();i++)
+            {
+                JSONObject c = jsonResults.getJSONObject(i);
+                String id =  c.getString("id");
+                String title =  c.getString("title");
+                String readyInMinutes =  c.getString("readyInMinutes");
+                String image =  c.getString("image");
+
+                Recipe recipe = new Recipe (Integer.parseInt(id), title, readyInMinutes, image);
+
+                recipes.add(recipe);
+
+                recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
+                listView.setAdapter(recipeAdapter);
+            }
+
+
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
