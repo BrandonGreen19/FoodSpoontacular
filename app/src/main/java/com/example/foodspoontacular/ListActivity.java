@@ -1,11 +1,10 @@
 package com.example.foodspoontacular;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,10 +154,10 @@ public class ListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(ListActivity.this, DetailActivity.class);
-                    intent.putExtra("title", recipeAdapter.getItem(position).title);
-                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
-                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
                     intent.putExtra("id", recipeAdapter.getItem(position).getId());
+//                    intent.putExtra("title", recipeAdapter.getItem(position).title);
+//                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
+//                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
                     startActivityForResult(intent, 0);
                 }
             });

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
-        //okHttpHandler.execute(TEST_URL);
+        okHttpHandler.execute(TEST_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
