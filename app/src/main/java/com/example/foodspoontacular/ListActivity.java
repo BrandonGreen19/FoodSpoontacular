@@ -77,7 +77,7 @@ public class ListActivity extends AppCompatActivity {
                     tt.setText(o.getTitle());
                 }
                 if (bt != null) {
-                    bt.setText("Ready in: " + o.getreadyInMinutes() + "minutes!");
+                    bt.setText("Ready in: " + o.getreadyInMinutes() + "minutes! - " + o.getId());
                 }
 //                if (imageView != null){
 //                    imageView.setImage...
@@ -128,7 +128,10 @@ public class ListActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
-                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    ////mashape key
+                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    ////rapidAPI key
+                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
                     .addHeader("Accept", "application/json")
                     .build();
 
@@ -155,7 +158,7 @@ public class ListActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(ListActivity.this, DetailActivity.class);
                     intent.putExtra("id", recipeAdapter.getItem(position).getId());
-//                    intent.putExtra("title", recipeAdapter.getItem(position).title);
+                    intent.putExtra("title", recipeAdapter.getItem(position).getTitle());
 //                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
 //                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
                     startActivityForResult(intent, 0);

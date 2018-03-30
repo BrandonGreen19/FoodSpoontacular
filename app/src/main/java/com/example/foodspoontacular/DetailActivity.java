@@ -5,8 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,14 +26,15 @@ import okhttp3.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private final String URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/324694/information";
+    private String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
+    //690978/information
 
 //    private ArrayList<Step> steps = new ArrayList<Step>();
 //    private ListView listView;
 //    private StepAdapter stepAdapter;
 
-    private TextView tvIngredients;
-    private TextView tvInstructions;
+    private TextView tvIngredients, tvInstructions, tvTitle;
+    private Button btnSave;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
 
     @Override
@@ -39,16 +43,32 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Intent i = getIntent();
-        String query = i.getStringExtra("query");
+        Integer idQuery = i.getIntExtra("id", 0);
+        url += idQuery.toString() + "/information";
+        String title = i.getStringExtra("title");
 
         tvIngredients = findViewById(R.id.tvIngredients);
         tvInstructions = findViewById(R.id.tvInstructions);
+        tvTitle = findViewById(R.id.tvTitle);
+        btnSave = findViewById(R.id.btnSave);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(DetailActivity.this, ListActivity.class);
+//                intent.putExtra("query", queryUrl);
+//                startActivityForResult(intent, 0);
+
+            }
+        });
+
+        tvTitle.setText(title);
 //        listView = findViewById(R.id.nice_listview);
 //        steps = new ArrayList<Step>();
 
 //        stepAdapter = new StepAdapter(DetailActivity.this, R.layout.step_item, steps);
 //        listView.setAdapter(stepAdapter);
-        okHttpHandler.execute(query);
+        okHttpHandler.execute(url);
 
     }
 
@@ -129,8 +149,11 @@ public class DetailActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url(URL)
-                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    .url(url)
+                    ////mashape key
+                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    ////rapidAPI key
+                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
                     .addHeader("Accept", "application/json")
                     .build();
 
@@ -173,27 +196,32 @@ public class DetailActivity extends AppCompatActivity {
     private void parseResponse(String response) {
         try{
             JSONObject json = new JSONObject(response);
-            //String jsonResults = json.getString("instructions");
             String instructions = new String(json.getString("instructions"));
+            instructions = instructions.replace("<p>", " ");
+            instructions = instructions.replace("</p>", " ");
+            JSONArray ingredients = json.getJSONArray("extendedIngredients");
+            String ingredientString = "";
+
             Log.d("brandon", "instructions: " + instructions);
 //            steps = new ArrayList<Step>();
             tvInstructions.setText(instructions.replace("         ", "\n"));
-//            for (int i=0;i<jsonResults.length();i++)
-//            {
-//                JSONObject c = jsonResults.getJSONObject(i);
-//                String id =  c.getString("id");
-//                String title =  c.getString("title");
-//                String readyInMinutes =  c.getString("readyInMinutes");
-//                String image =  c.getString("image");
-//
+            for (int i=0;i<ingredients.length();i++)
+            {
+                JSONObject c = ingredients.getJSONObject(i);
+                String amount =  c.getString("amount");
+                String unit =  c.getString("unit");
+                String name =  c.getString("name");
+
+                ingredientString += amount + " " + unit + " " + name + "\n";
+
 //                Step recipe = new Step (Integer.parseInt(id), title, readyInMinutes, image);
 //
 //                steps.add(recipe);
 //
 //                stepAdapter = new StepAdapter(DetailActivity.this, R.layout.step_item, steps);
 //                listView.setAdapter(stepAdapter);
-//            }
-
+            }
+            tvIngredients.setText(ingredientString);
         } catch (JSONException e) {
             Log.d("brandon", e.getMessage());
         }

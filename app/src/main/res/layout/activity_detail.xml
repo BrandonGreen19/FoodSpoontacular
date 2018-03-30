@@ -4,18 +4,68 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvIngredients"
-        android:layout_width="20dip"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="10sp" />
+        android:backgroundTint="@android:color/holo_green_dark">
 
-    <TextView
-        android:id="@+id/tvInstructions"
-        android:layout_width="20dip"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+
+            <TextView
+                android:id="@+id/tvIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/holo_green_dark"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:text="aweeww\nasfasfa\nasfasfas"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="18sp" />
+        tools:backgroundTint="@android:color/holo_blue_dark">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/holo_blue_bright"
+                android:text="TextView"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tvInstructions"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/holo_blue_dark"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:paddingHorizontal="10dp"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

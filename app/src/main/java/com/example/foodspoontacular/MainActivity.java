@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
-        okHttpHandler.execute(TEST_URL);
+        ////uncomment for joke
+        //okHttpHandler.execute(TEST_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
@@ -66,12 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
-                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    ////mashape key
+                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    ////rapidAPI key
+                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
                     .addHeader("Accept", "application/json")
                     .build();
 
 
             try {
+
                 response = client.newCall(request).execute();
                 return response.body().string();
                 //Log.d("brandon", "doinback: " + response.body().string());
