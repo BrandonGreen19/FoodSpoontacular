@@ -40,4 +40,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvJoke" />
 
+    <Button
+        android:id="@+id/btnDb"
+        android:layout_width="214dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="21dp"
+        android:text="My Saved Recipes"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etQuery" />
+
 </android.support.constraint.ConstraintLayout>

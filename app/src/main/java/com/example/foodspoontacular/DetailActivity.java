@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class DetailActivity extends AppCompatActivity {
 //    private ArrayList<Step> steps = new ArrayList<Step>();
 //    private ListView listView;
 //    private StepAdapter stepAdapter;
-
+    private AppDatabase db;
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnSave;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
@@ -42,10 +43,14 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        db = AppDatabase.getDatabaseInstance(this);
+
         Intent i = getIntent();
         Integer idQuery = i.getIntExtra("id", 0);
+        final String readyInMinutes = i.getStringExtra("readyInMinutes");
+        final String image = i.getStringExtra("image");
         url += idQuery.toString() + "/information";
-        String title = i.getStringExtra("title");
+        final String title = i.getStringExtra("title");
 
         tvIngredients = findViewById(R.id.tvIngredients);
         tvInstructions = findViewById(R.id.tvInstructions);
@@ -54,11 +59,16 @@ public class DetailActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(DetailActivity.this, ListActivity.class);
-//                intent.putExtra("query", queryUrl);
-//                startActivityForResult(intent, 0);
+            public void onClick(View v)
+            {
+                DbRecipe newRecipe = new DbRecipe(tvIngredients.getText().toString(),
+                                                tvInstructions.getText().toString(),
+                                                readyInMinutes,
+                                                title,
+                                                image);
 
+                CreateNewDbRecipeTask newDbRecipeTask = new CreateNewDbRecipeTask(newRecipe);
+                newDbRecipeTask.execute();
             }
         });
 
@@ -225,6 +235,29 @@ public class DetailActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("brandon", e.getMessage());
         }
+    }
+
+    private class CreateNewDbRecipeTask extends AsyncTask<Void,Void,Void>
+    {
+        private DbRecipe dbRecipe;
+
+        public CreateNewDbRecipeTask(DbRecipe dbRecipe)
+        {
+            this.dbRecipe  = dbRecipe;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            db.dbRecipeDao().insertAll(dbRecipe);
+            startActivity(new Intent(getApplicationContext(),DbListActivity.class));
+            finish();
+            return null;
+        }
+    }
+
+    private String getViewString(int id)
+    {
+        return ((EditText)findViewById(id)).getText().toString();
     }
 
 }

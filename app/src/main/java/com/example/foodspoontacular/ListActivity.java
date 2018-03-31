@@ -159,8 +159,8 @@ public class ListActivity extends AppCompatActivity {
                     Intent intent = new Intent(ListActivity.this, DetailActivity.class);
                     intent.putExtra("id", recipeAdapter.getItem(position).getId());
                     intent.putExtra("title", recipeAdapter.getItem(position).getTitle());
-//                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
-//                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
+                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
+                    intent.putExtra("image", recipeAdapter.getItem(position).getImage());
                     startActivityForResult(intent, 0);
                 }
             });

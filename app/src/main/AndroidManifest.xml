@@ -19,7 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListActivity" />
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".AppDatabaseActivity" />
+        <activity android:name=".DbListActivity" />
+        <activity android:name=".DbDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
     private TextView tvJoke;
     private EditText etQuery;
-    private Button btnSearch;
+    private Button btnSearch, btnDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         tvJoke = findViewById(R.id.tvJoke);
         etQuery = findViewById(R.id.etQuery);
         btnSearch = findViewById(R.id.btnSearch);
-
+        btnDb = findViewById(R.id.btnDb);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnDb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DbListActivity.class);
+                startActivityForResult(intent, 0);
+            }
+        });
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
         ////uncomment for joke
