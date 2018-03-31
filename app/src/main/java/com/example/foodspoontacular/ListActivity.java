@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,10 +62,15 @@ public class ListActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder vh = null;
             View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.list_item, null);
+                v = vi.inflate(R.layout.list_item, null, true);
+                vh = new ViewHolder(v);
+                v.setTag(vh);
+            }else {
+                vh = (ViewHolder)convertView.getTag();
             }
             Recipe o = recipes.get(position);
             if (o != null) {
@@ -76,12 +83,29 @@ public class ListActivity extends AppCompatActivity {
                 if (bt != null) {
                     bt.setText("Ready in: " + o.getreadyInMinutes() + "minutes! - " + o.getId());
                 }
-//                if (imageView != null){
-//                    imageView.setImage...
-//                }
+                if (imageView != null){
+                    // Loads the image via url into the image view
+                    //Picasso.get().load(o.getImage()).into(vh.imageView);
+                    Picasso.get().load(o.getImage()).fit().into(vh.imageView);
+                }
             }
             return v;
         }
+
+
+        class ViewHolder {
+            TextView topText;
+            TextView bottomText;
+            ImageView imageView;
+
+            ViewHolder (View v){
+                this.topText = v.findViewById(R.id.toptext);
+                this.bottomText = v.findViewById(R.id.bottomtext);
+                this.imageView = v.findViewById(R.id.imageView);
+
+            }
+        }
+
     }
 
 
@@ -181,7 +205,7 @@ public class ListActivity extends AppCompatActivity {
                 String id =  c.getString("id");
                 String title =  c.getString("title");
                 String readyInMinutes =  c.getString("readyInMinutes");
-                String image =  c.getString("image");
+                String image =  "https://spoonacular.com/recipeImages/" + c.getString("image");
 
                 Recipe recipe = new Recipe (Integer.parseInt(id), title, readyInMinutes, image);
 
