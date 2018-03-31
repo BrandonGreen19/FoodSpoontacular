@@ -30,7 +30,6 @@ public class ListActivity extends AppCompatActivity {
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     private ListView listView;
-    //TODO define RecipeAdapter below
     private RecipeAdapter recipeAdapter;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
 
