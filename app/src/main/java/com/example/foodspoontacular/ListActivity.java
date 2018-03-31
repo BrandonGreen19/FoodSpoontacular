@@ -58,8 +58,6 @@ public class ListActivity extends AppCompatActivity {
             this.recipes = recipes;
         }
 
-        //This method is called once for every item in the ArrayList as the list is loaded.
-        //It returns a View -- a list item in the ListView -- for each item in the ArrayList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;

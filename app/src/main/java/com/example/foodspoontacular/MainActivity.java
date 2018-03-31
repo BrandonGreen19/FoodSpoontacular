@@ -18,12 +18,14 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
+// mashape key
 // HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd
+// rapidAPI key
+// GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML
+// private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
 
 public class MainActivity extends AppCompatActivity {
-    private final String TEST_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
-    private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
+    private final String JOKE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
     private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
     private TextView tvJoke;
     private EditText etQuery;
@@ -60,11 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
         ////uncomment for joke
-        //okHttpHandler.execute(TEST_URL);
+        //okHttpHandler.execute(JOKE_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
-        //        OkHttpClient client = new OkHttpClient();
         Response response;
 
         @Override
