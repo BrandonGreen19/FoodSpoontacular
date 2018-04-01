@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -82,27 +83,55 @@ public class DbListActivity extends AppCompatActivity {
             this.dbRecipes = dbRecipes;
         }
 
-        @NonNull
+
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View view = convertView;
-            TextView topText,bottomText;
-            if(view == null)
-            {
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(textViewResourceId,null);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder vh = null;
+            View v = convertView;
+            if (v == null) {
+                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.list_item, null, true);
+                vh = new ViewHolder(v);
+                v.setTag(vh);
+            }else {
+                vh = (ViewHolder)convertView.getTag();
+            }
+            DbRecipe o = dbRecipes.get(position);
+            if (o != null) {
+                TextView tt = (TextView) v.findViewById(R.id.toptext);
+                TextView bt = (TextView) v.findViewById(R.id.bottomtext);
+                ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+                if (tt != null) {
+                    tt.setText(o.getTitle());
+                }
+                if (bt != null) {
+                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + o.getDbRecipeId());
+                }
+                if (imageView != null){
+                    // Loads the image via url into the image view
+                    Picasso.get().load(o.getImage()).fit().into(vh.imageView);
+                }
+            }
+            return v;
+        }
+
+
+        class ViewHolder {
+            TextView topText;
+            TextView bottomText;
+            ImageView imageView;
+
+            ViewHolder (View v){
+                this.topText = v.findViewById(R.id.toptext);
+                this.bottomText = v.findViewById(R.id.bottomtext);
+                this.imageView = v.findViewById(R.id.imageView);
 
             }
-            DbRecipe dbRecipe= dbRecipes.get(position);
-
-            topText = view.findViewById(R.id.toptext);
-            bottomText = view.findViewById(R.id.bottomtext);
-
-            topText.setText("First Name: ".concat(dbRecipe.getTitle()));
-            bottomText.setText("Ready in: ".concat(dbRecipe.getReadyInMinutes()));
-
-            return view;
         }
+
+
+
+
     }
 
     private class FetchAllDbRecipesTask extends AsyncTask<Void,Void,Void>

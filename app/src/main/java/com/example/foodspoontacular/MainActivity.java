@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
-        ////uncomment for joke
-        //okHttpHandler.execute(JOKE_URL);
+        //uncomment for joke
+//        okHttpHandler.execute(JOKE_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
-                    ////mashape key
+                    //mashape key
                     //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
                     ////rapidAPI key
                     .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
@@ -101,13 +101,13 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            try {
-                Log.d("brandon", "Parse responcse : " + response.body().string());
-
+//            try {
+//                Log.d("brandon", "Parse responcse : " + response.body().string());
+//
                 parseResponse(o.toString());
-            } catch (IOException e) {
-                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-            }
+//            } catch (IOException e) {
+//                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
+//            }
 
         }
     }
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     private void parseResponse(String response) {
         try{
             JSONObject json = new JSONObject(response);
-            Log.d("brandon", "answer: " + json.getString("text"));
+            //Log.d("brandon", "answer: " + json.getString("text"));
             tvJoke.setText(json.getString("text"));
         } catch (JSONException e) {
             e.printStackTrace();
