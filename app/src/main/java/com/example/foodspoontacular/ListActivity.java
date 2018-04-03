@@ -81,7 +81,7 @@ public class ListActivity extends AppCompatActivity {
                     tt.setText(o.getTitle());
                 }
                 if (bt != null) {
-                    bt.setText("Ready in: " + o.getreadyInMinutes() + "minutes! - " + o.getId());
+                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + o.getId());
                 }
                 if (imageView != null){
                     // Loads the image via url into the image view
@@ -111,7 +111,7 @@ public class ListActivity extends AppCompatActivity {
 
     class Recipe {
         private int id;
-        private String title, readyInMinutes, image;
+        private String title, readyInMinutes, image, category;
 
         public Recipe(Integer id, String title, String readyInMinutes, String image) {
             this.id = id;
@@ -128,13 +128,14 @@ public class ListActivity extends AppCompatActivity {
             return title;
         }
 
-        public String getreadyInMinutes() {
+        public String getReadyInMinutes() {
             return readyInMinutes;
         }
 
         public String getImage() {
             return image;
         }
+
     }
 
 
@@ -180,7 +181,7 @@ public class ListActivity extends AppCompatActivity {
                     Intent intent = new Intent(ListActivity.this, DetailActivity.class);
                     intent.putExtra("id", recipeAdapter.getItem(position).getId());
                     intent.putExtra("title", recipeAdapter.getItem(position).getTitle());
-                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getreadyInMinutes());
+                    intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getReadyInMinutes());
                     intent.putExtra("image", recipeAdapter.getItem(position).getImage());
                     startActivityForResult(intent, 0);
                 }
@@ -202,6 +203,7 @@ public class ListActivity extends AppCompatActivity {
             for (int i=0;i<jsonResults.length();i++)
             {
                 JSONObject c = jsonResults.getJSONObject(i);
+                Log.d("brandon", "c: " + c.toString());
                 String id =  c.getString("id");
                 String title =  c.getString("title");
                 String readyInMinutes =  c.getString("readyInMinutes");

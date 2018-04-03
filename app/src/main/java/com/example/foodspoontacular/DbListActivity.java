@@ -24,6 +24,8 @@ public class DbListActivity extends AppCompatActivity {
     private RecipeAdapter recipeAdapter;
     private ListView list;
     private ArrayList<DbRecipe> dbRecipes = new ArrayList();
+    private ArrayList<Category> dbCategories = new ArrayList();
+    private int categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class DbListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 DbRecipe dbRecipe = (DbRecipe) adapterView.getItemAtPosition(i);
+
                 Intent data = new Intent(getApplicationContext(),DbDetailsActivity.class);
                 data.putExtra("id",dbRecipe.getDbRecipeId());
                 data.putExtra("ingredients",dbRecipe.getIngredients());
@@ -97,15 +100,22 @@ public class DbListActivity extends AppCompatActivity {
                 vh = (ViewHolder)convertView.getTag();
             }
             DbRecipe o = dbRecipes.get(position);
+            Category c = dbCategories.get(o.getCategoryId() - 1);
             if (o != null) {
                 TextView tt = (TextView) v.findViewById(R.id.toptext);
                 TextView bt = (TextView) v.findViewById(R.id.bottomtext);
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+                categoryId = o.getCategoryId();
+
+//                FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
+//                findCategoryByIdTask.execute();
+
+
                 if (tt != null) {
                     tt.setText(o.getTitle());
                 }
                 if (bt != null) {
-                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + o.getDbRecipeId());
+                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + c.getName());
                 }
                 if (imageView != null){
                     // Loads the image via url into the image view
@@ -139,7 +149,34 @@ public class DbListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids)
         {
+
             dbRecipes.addAll(db.dbRecipeDao().getAll());
+
+
+
+//            dbCategories.addAll(db.categoryDao().getAll());
+
+//            list = findViewById(R.id.list);
+//            list.setAdapter(recipeAdapter);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //list.setAdapter(recipeAdapter);
+            FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
+            findCategoryByIdTask.execute();
+        }
+    }
+
+    private class FindCategoryByIdTask extends AsyncTask<Void,Void,Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            dbCategories.addAll(db.categoryDao().getAll());
+
 //            list = findViewById(R.id.list);
 //            list.setAdapter(recipeAdapter);
             return null;
@@ -149,6 +186,8 @@ public class DbListActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             list.setAdapter(recipeAdapter);
+
+
         }
     }
 }

@@ -3,9 +3,13 @@ package com.example.foodspoontacular;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Category.class,
+        parentColumns = "categoryId",
+        childColumns = "categoryId"))
+
 public class DbRecipe {
     @PrimaryKey(autoGenerate = true)
     private int dbRecipeId;
@@ -25,6 +29,11 @@ public class DbRecipe {
     @ColumnInfo(name = "image")
     private String image;
 
+    @ColumnInfo(name = "categoryId")
+    public int categoryId;
+
+
+
     public DbRecipe(String ingredients, String instructions, String readyInMinutes, String title, String image)
     {
         this.ingredients = ingredients;
@@ -32,6 +41,7 @@ public class DbRecipe {
         this.readyInMinutes = readyInMinutes;
         this.title = title;
         this.image = image;
+
     }
 
     public int getDbRecipeId()
@@ -93,6 +103,17 @@ public class DbRecipe {
     {
         this.image = image;
     }
+
+    public int getCategoryId() { return categoryId; }
+
+    public void setCategoryId(int categoryId)
+    {
+        this.categoryId = categoryId ;
+    }
+
+//    public String getCategoryName() { return categoryName; }
+//
+//    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
 
 }

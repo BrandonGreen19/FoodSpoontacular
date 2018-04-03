@@ -14,6 +14,11 @@ public interface DbRecipeDao
     @Query("SELECT * FROM dbRecipe")
     List<DbRecipe> getAll();
 
+    @Query("SELECT dbRecipe.dbRecipeId, dbRecipe.instructions, dbRecipe.readyInMinutes, dbRecipe.title, dbRecipe.image, dbRecipe.categoryId, category.name as categoryName FROM dbrecipe "
+            + "INNER JOIN category ON category.categoryId = dbrecipe.categoryId ")
+    List<DbRecipe> getRecipesWithCategory();
+
+
     @Query("Select * FROM dbRecipe WHERE dbRecipeId = :dbRecipeId")
     DbRecipe findRecipe(int dbRecipeId);
 

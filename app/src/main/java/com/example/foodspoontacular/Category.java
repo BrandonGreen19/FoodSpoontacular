@@ -17,10 +17,7 @@ public class Category {
     @ColumnInfo(name = "name")
     private String name;
 
-    public Category(String name)
-    {
-        this.name = name;
-    }
+    public Category(String name) { this.name = name; }
 
     public int getCategoryId() { return categoryId; }
 

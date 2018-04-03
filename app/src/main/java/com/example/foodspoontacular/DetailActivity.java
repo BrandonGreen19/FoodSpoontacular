@@ -24,7 +24,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
     //690978/information
-
+    String category = "";
     private AppDatabase db;
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnSave;
@@ -44,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
         url += idQuery.toString() + "/information";
         final String title = i.getStringExtra("title");
 
+
         tvIngredients = findViewById(R.id.tvIngredients);
         tvInstructions = findViewById(R.id.tvInstructions);
         tvTitle = findViewById(R.id.tvTitle);
@@ -53,14 +54,34 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+
+                Category newCategory = new Category(category);
+
                 DbRecipe newRecipe = new DbRecipe(tvIngredients.getText().toString(),
                                                 tvInstructions.getText().toString(),
                                                 readyInMinutes,
                                                 title,
                                                 image);
 
+//                    newCategory = db.categoryDao().findCategoryByName(category);
+//
+//                if (db.categoryDao().findCategoryByName(category) == null)
+//                {
+//                    CreateNewCategoryTask newCategoryTask = new CreateNewCategoryTask(newCategory);
+//                    newCategoryTask.execute();
+//                    Category dbCat = db.categoryDao().findCategoryByName(category);
+//                }
+//                else
+//                {
+//                    newRecipe.setCategoryId(dbCat.getCategoryId());
+//                }
+
+
                 CreateNewDbRecipeTask newDbRecipeTask = new CreateNewDbRecipeTask(newRecipe);
                 newDbRecipeTask.execute();
+
+                Intent intent = new Intent(DetailActivity.this, DbListActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -109,16 +130,31 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     private void parseResponse(String response) {
         try{
             JSONObject json = new JSONObject(response);
             String instructions = new String(json.getString("instructions"));
+            JSONArray dishTypes = json.getJSONArray("dishTypes");
             instructions = instructions.replace("<p>", " ");
             instructions = instructions.replace("</p>", " ");
             JSONArray ingredients = json.getJSONArray("extendedIngredients");
             String ingredientString = "";
 
-            Log.d("brandon", "instructions: " + instructions);
+
+            Log.d("brandon", "dishTypes: " + dishTypes.isNull(0));
+            if (dishTypes.isNull(0))
+            {
+                category = "unknown";
+            }
+            else
+            {
+                category = dishTypes.getString(0);
+            }
+
+            Log.d("brandon", "dishtype: " + category);
             tvInstructions.setText(instructions.replace("         ", "\n"));
             for (int i=0;i<ingredients.length();i++)
             {
@@ -148,10 +184,59 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            db.dbRecipeDao().insertAll(dbRecipe);
-            startActivity(new Intent(getApplicationContext(),DbListActivity.class));
+
+            Category newCategory = db.categoryDao().findCategoryByName(category);
+
+            if (newCategory == null)
+            {
+                newCategory = new Category(category);
+                CreateNewCategoryTask newCategoryTask = new CreateNewCategoryTask(newCategory, dbRecipe);
+                newCategoryTask.execute();
+//                Category dbCat = db.categoryDao().findCategoryByName(category);
+            }
+            else
+            {
+                dbRecipe.setCategoryId(newCategory.getCategoryId());
+                db.dbRecipeDao().insertAll(dbRecipe);
+            }
+
+            //newCategory = db.categoryDao().findCategoryByName(category);
+
+//            dbRecipe.setCategoryId(newCategory.getCategoryId());
+//            db.dbRecipeDao().insertAll(dbRecipe);
+            //startActivity(new Intent(getApplicationContext(),DbListActivity.class));
             finish();
             return null;
+        }
+    }
+
+    private class CreateNewCategoryTask extends AsyncTask<Void,Void,Void>
+    {
+        private Category category;
+        private DbRecipe dbRecipe;
+
+        public CreateNewCategoryTask(Category category, DbRecipe dbRecipe)
+        {
+            this.category  = category;
+            this.dbRecipe = dbRecipe;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            db.categoryDao().insertAll(category);
+            category = db.categoryDao().findCategoryByName(category.getName());
+            dbRecipe.setCategoryId(category.getCategoryId());
+            db.dbRecipeDao().insertAll(dbRecipe);
+            finish();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent intent = new Intent(DetailActivity.this, DbListActivity.class);
+            startActivityForResult(intent, 0);
         }
     }
 }
