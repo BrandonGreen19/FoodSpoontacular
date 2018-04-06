@@ -7,8 +7,7 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:backgroundTint="@android:color/holo_green_dark">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,6 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/rounded_corner_button"
                 android:text="Save" />
 
             <TextView
@@ -27,10 +27,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/holo_green_dark"
-                android:backgroundTint="@android:color/holo_green_dark"
-                android:text="aweeww\nasfasfa\nasfasfas"
-                android:textSize="18sp" />
+                android:background="@drawable/rounded_corner_lt_green"
+                android:textSize="18sp"
+                android:textColor="#000000"/>
 
         </LinearLayout>
     </ScrollView>
@@ -38,13 +37,11 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:backgroundTint="@android:color/holo_blue_dark">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/holo_blue_dark"
             android:orientation="vertical">
 
             <TextView
@@ -52,8 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/holo_blue_bright"
+                android:background="@drawable/rounded_corner_red"
                 android:text="TextView"
+                android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
             <TextView
@@ -61,10 +59,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/holo_blue_dark"
-                android:backgroundTint="@android:color/holo_blue_dark"
+                android:background="@drawable/rounded_corner"
                 android:paddingHorizontal="10dp"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="#000000" />
         </LinearLayout>
     </ScrollView>
 

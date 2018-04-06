@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 queryUrl += etQuery.getText();
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 intent.putExtra("query", queryUrl);
-                startActivityForResult(intent, 0);
+                startActivity(intent);
             }
         });
 
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
-        //uncomment for joke
-//        okHttpHandler.execute(JOKE_URL);
+//        uncomment for joke
+        okHttpHandler.execute(JOKE_URL);
     }
 
     public class OkHttpHandler extends AsyncTask {
@@ -76,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
             Request request = new Request.Builder()
                     .url(params[0].toString())
                     //mashape key
-                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
+                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
                     ////rapidAPI key
-                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
+//                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
                     .addHeader("Accept", "application/json")
                     .build();
 
@@ -100,15 +100,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-
-//            try {
-//                Log.d("brandon", "Parse responcse : " + response.body().string());
-//
                 parseResponse(o.toString());
-//            } catch (IOException e) {
-//                Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-//            }
-
         }
     }
 

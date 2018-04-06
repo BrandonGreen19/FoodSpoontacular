@@ -43,6 +43,8 @@ public class ListActivity extends AppCompatActivity {
         Intent i = getIntent();
         String query = i.getStringExtra("query");
 
+        this.setTitle("Search Results");
+
         listView = findViewById(R.id.nice_listview);
         recipes = new ArrayList<Recipe>();
         recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
@@ -81,7 +83,7 @@ public class ListActivity extends AppCompatActivity {
                     tt.setText(o.getTitle());
                 }
                 if (bt != null) {
-                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + o.getId());
+                    bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes!");
                 }
                 if (imageView != null){
                     // Loads the image via url into the image view
@@ -183,7 +185,7 @@ public class ListActivity extends AppCompatActivity {
                     intent.putExtra("title", recipeAdapter.getItem(position).getTitle());
                     intent.putExtra("readyInMinutes", recipeAdapter.getItem(position).getReadyInMinutes());
                     intent.putExtra("image", recipeAdapter.getItem(position).getImage());
-                    startActivityForResult(intent, 0);
+                    startActivity(intent);
                 }
             });
 
@@ -216,9 +218,6 @@ public class ListActivity extends AppCompatActivity {
                 recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
                 listView.setAdapter(recipeAdapter);
             }
-
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,8 @@ public class DetailActivity extends AppCompatActivity {
         url += idQuery.toString() + "/information";
         final String title = i.getStringExtra("title");
 
+        this.setTitle(title);
+
 
         tvIngredients = findViewById(R.id.tvIngredients);
         tvInstructions = findViewById(R.id.tvInstructions);
@@ -79,13 +82,13 @@ public class DetailActivity extends AppCompatActivity {
 
                 CreateNewDbRecipeTask newDbRecipeTask = new CreateNewDbRecipeTask(newRecipe);
                 newDbRecipeTask.execute();
-
+                Toast.makeText(DetailActivity.this, "Recipe Saved!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(DetailActivity.this, DbListActivity.class);
-                startActivityForResult(intent, 0);
+                startActivity(intent);
             }
         });
 
-        tvTitle.setText(title);
+
 
         okHttpHandler.execute(url);
 
@@ -160,6 +163,8 @@ public class DetailActivity extends AppCompatActivity {
             {
                 JSONObject c = ingredients.getJSONObject(i);
                 String amount =  c.getString("amount");
+                amount = amount.replace(".3333333333333333", ".33");
+                amount = amount.replace(".0", "");
                 String unit =  c.getString("unit");
                 String name =  c.getString("name");
 
@@ -167,6 +172,7 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             tvIngredients.setText(ingredientString);
+            tvTitle.setText(category);
 
         } catch (JSONException e) {
             Log.d("brandon", e.getMessage());
@@ -235,8 +241,9 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
             Intent intent = new Intent(DetailActivity.this, DbListActivity.class);
-            startActivityForResult(intent, 0);
+            startActivity(intent);
         }
     }
 }

@@ -26,16 +26,19 @@ public class DbListActivity extends AppCompatActivity {
     private ArrayList<DbRecipe> dbRecipes = new ArrayList();
     private ArrayList<Category> dbCategories = new ArrayList();
     private int categoryId;
+    private String categoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_list);
-
         db = AppDatabase.getDatabaseInstance(this);
+    }
+
+    @Override
+    protected void onResume() {
 
         list = findViewById(R.id.list);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -47,17 +50,20 @@ public class DbListActivity extends AppCompatActivity {
                 data.putExtra("instructions",dbRecipe.getInstructions());
                 data.putExtra("readyInMinutes",dbRecipe.getReadyInMinutes());
                 data.putExtra("title",dbRecipe.getTitle());
+                categoryName = dbCategories.get(dbRecipe.getCategoryId() - 1).getName();
+                data.putExtra("category", categoryName);
                 startActivity(data);
             }
         });
 
         recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.list_item, dbRecipes);
-
         FetchAllDbRecipesTask fetchAllDbRecipesTask = new FetchAllDbRecipesTask();
         fetchAllDbRecipesTask.execute();
+        this.setTitle("My Recipes");
+        super.onResume();
     }
 
-//    @Override
+    //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId())
 //        {
@@ -106,7 +112,6 @@ public class DbListActivity extends AppCompatActivity {
                 TextView bt = (TextView) v.findViewById(R.id.bottomtext);
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
                 categoryId = o.getCategoryId();
-
 //                FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
 //                findCategoryByIdTask.execute();
 
@@ -138,10 +143,6 @@ public class DbListActivity extends AppCompatActivity {
 
             }
         }
-
-
-
-
     }
 
     private class FetchAllDbRecipesTask extends AsyncTask<Void,Void,Void>
@@ -149,15 +150,7 @@ public class DbListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids)
         {
-
             dbRecipes.addAll(db.dbRecipeDao().getAll());
-
-
-
-//            dbCategories.addAll(db.categoryDao().getAll());
-
-//            list = findViewById(R.id.list);
-//            list.setAdapter(recipeAdapter);
             return null;
         }
 
@@ -176,9 +169,6 @@ public class DbListActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids)
         {
             dbCategories.addAll(db.categoryDao().getAll());
-
-//            list = findViewById(R.id.list);
-//            list.setAdapter(recipeAdapter);
             return null;
         }
 
@@ -186,8 +176,6 @@ public class DbListActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             list.setAdapter(recipeAdapter);
-
-
         }
     }
 }

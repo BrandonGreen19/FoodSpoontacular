@@ -20,7 +20,7 @@
             android:id="@+id/toptext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
@@ -35,7 +35,9 @@
             android:ellipsize="marquee"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:padding="2dp" />
+            android:padding="2dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Medium Text"/>
         <!--<Button
             android:id="@+id/btnListItem"
             android:layout_width="wrap_content"
