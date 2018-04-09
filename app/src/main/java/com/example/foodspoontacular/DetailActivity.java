@@ -1,10 +1,14 @@
 package com.example.foodspoontacular;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,11 +34,27 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnSave;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        sharedPreferences = getSharedPreferences("general", 0);
+        String theme = sharedPreferences.getString("theme", "garden");
+
+        switch(theme)
+        {
+            case "garden":
+                setTheme(R.style.GardenTheme);
+                break;
+            case "submarine":
+                setTheme(R.style.SubmarineTheme);
+        }
+
         setContentView(R.layout.activity_detail);
+
 
         db = AppDatabase.getDatabaseInstance(this);
 
@@ -52,6 +72,20 @@ public class DetailActivity extends AppCompatActivity {
         tvInstructions = findViewById(R.id.tvInstructions);
         tvTitle = findViewById(R.id.tvTitle);
         btnSave = findViewById(R.id.btnSave);
+
+
+        switch(theme)
+        {
+            case "garden":
+                tvTitle.setBackgroundResource(R.drawable.rounded_corner_red);
+                tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_green);
+                tvInstructions.setBackgroundResource(R.drawable.rounded_corner_dark_green);
+                break;
+            case "submarine":
+                tvTitle.setBackgroundResource(R.drawable.rounded_corner_aqua);
+                tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_blue);
+                tvInstructions.setBackgroundResource(R.drawable.rounded_corner_bright_blue);
+        }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +126,28 @@ public class DetailActivity extends AppCompatActivity {
 
         okHttpHandler.execute(url);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mnuSettings:
+                Intent intent = new Intent(DetailActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

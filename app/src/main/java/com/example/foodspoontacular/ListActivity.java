@@ -2,11 +2,15 @@ package com.example.foodspoontacular;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,10 +38,26 @@ public class ListActivity extends AppCompatActivity {
     private ListView listView;
     private RecipeAdapter recipeAdapter;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
+    private SharedPreferences sharedPreferences;
+    private String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        sharedPreferences = getSharedPreferences("general", 0);
+        theme = sharedPreferences.getString("theme", "garden");
+
+        switch(theme)
+        {
+            case "garden":
+                setTheme(R.style.GardenTheme);
+                break;
+            case "submarine":
+                setTheme(R.style.SubmarineTheme);
+        }
+
         setContentView(R.layout.activity_list);
 
         Intent i = getIntent();
@@ -47,10 +67,32 @@ public class ListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.nice_listview);
         recipes = new ArrayList<Recipe>();
-        recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
+        recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.garden_list_item, recipes);
         listView.setAdapter(recipeAdapter);
         okHttpHandler.execute(query);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mnuSettings:
+                Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class RecipeAdapter extends ArrayAdapter<Recipe> {
@@ -68,7 +110,17 @@ public class ListActivity extends AppCompatActivity {
             View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.list_item, null, true);
+
+                switch(theme)
+                {
+                    case "garden":
+                        v = vi.inflate(R.layout.garden_list_item, null, true);
+                        break;
+                    case "submarine":
+                        v = vi.inflate(R.layout.submarine_list_item, null, true);
+                        break;
+                }
+
                 vh = new ViewHolder(v);
                 v.setTag(vh);
             }else {
@@ -215,7 +267,7 @@ public class ListActivity extends AppCompatActivity {
 
                 recipes.add(recipe);
 
-                recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.list_item, recipes);
+                recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.garden_list_item, recipes);
                 listView.setAdapter(recipeAdapter);
             }
 

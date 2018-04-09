@@ -1,6 +1,8 @@
 package com.example.foodspoontacular;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,25 +30,47 @@ import okhttp3.Response;
 // GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML
 // private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
 
-//todo edit sharepref and reload with resultok and put these elsewhere
-//                setTheme(R.style.GardenTheme);
-//                tvJoke.setBackgroundResource(R.drawable.rounded_corner_red);
-
 public class MainActivity extends AppCompatActivity {
     private final String JOKE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
     private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
+    private String theme;
     private TextView tvJoke;
     private EditText etQuery;
     private Button btnSearch, btnDb;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPreferences = getSharedPreferences("general", 0);
+        String theme = sharedPreferences.getString("theme", "garden");
 
-
+        switch(theme)
+        {
+            case "garden":
+                setTheme(R.style.GardenTheme);
+                break;
+            case "submarine":
+                setTheme(R.style.SubmarineTheme);
+        }
         setContentView(R.layout.activity_main);
 
+        tvJoke = findViewById(R.id.tvJoke);
+        etQuery = findViewById(R.id.etQuery);
+        btnSearch = findViewById(R.id.btnSearch);
+        btnDb = findViewById(R.id.btnDb);
+        tvJoke.setText(theme);
+
+        switch(theme)
+        {
+            case "garden":
+                tvJoke.setBackgroundResource(R.drawable.rounded_corner_red);
+                break;
+            case "submarine":
+                tvJoke.setBackgroundResource(R.drawable.rounded_corner_aqua);
+                break;
+        }
 
         tvJoke = findViewById(R.id.tvJoke);
         etQuery = findViewById(R.id.etQuery);
@@ -79,6 +104,22 @@ public class MainActivity extends AppCompatActivity {
 //        okHttpHandler.execute(JOKE_URL);
 
     }//oncreate
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK) {
+            theme = data.getStringExtra("theme");
+            finish();
+            startActivity(getIntent());
+        } else {
+            Toast.makeText(MainActivity.this, "I lost your data...",Toast.LENGTH_LONG);
+        }
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

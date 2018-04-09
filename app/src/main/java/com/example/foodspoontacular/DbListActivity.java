@@ -2,10 +2,14 @@ package com.example.foodspoontacular;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,13 +30,29 @@ public class DbListActivity extends AppCompatActivity {
     private ArrayList<DbRecipe> dbRecipes = new ArrayList();
     private ArrayList<Category> dbCategories = new ArrayList();
     private int categoryId;
-    private String categoryName;
+    private String categoryName, theme;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_db_list);
         db = AppDatabase.getDatabaseInstance(this);
+
+        sharedPreferences = getSharedPreferences("general", 0);
+        theme = sharedPreferences.getString("theme", "garden");
+
+        switch(theme)
+        {
+            case "garden":
+                setTheme(R.style.GardenTheme);
+                break;
+            case "submarine":
+                setTheme(R.style.SubmarineTheme);
+        }
+
+        setContentView(R.layout.activity_db_list);
+
+
     }
 
     @Override
@@ -56,11 +76,35 @@ public class DbListActivity extends AppCompatActivity {
             }
         });
 
-        recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.list_item, dbRecipes);
+
+
+//        recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.garden_list_item, dbRecipes);
         FetchAllDbRecipesTask fetchAllDbRecipesTask = new FetchAllDbRecipesTask();
         fetchAllDbRecipesTask.execute();
         this.setTitle("My Recipes");
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mnuSettings:
+                Intent intent = new Intent(DbListActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //    @Override
@@ -99,7 +143,15 @@ public class DbListActivity extends AppCompatActivity {
             View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.list_item, null, true);
+                switch(theme)
+                {
+                    case "garden":
+                        v = vi.inflate(R.layout.garden_list_item, null, true);
+                        break;
+                    case "submarine":
+                        v = vi.inflate(R.layout.submarine_list_item, null, true);
+                        break;
+                }
                 vh = new ViewHolder(v);
                 v.setTag(vh);
             }else {
@@ -150,6 +202,7 @@ public class DbListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids)
         {
+            dbRecipes.clear();
             dbRecipes.addAll(db.dbRecipeDao().getAll());
             return null;
         }
@@ -158,6 +211,7 @@ public class DbListActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //list.setAdapter(recipeAdapter);
+            recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.garden_list_item, dbRecipes);
             FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
             findCategoryByIdTask.execute();
         }
@@ -175,6 +229,7 @@ public class DbListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            recipeAdapter = new RecipeAdapter(DbListActivity.this, R.layout.garden_list_item, dbRecipes);
             list.setAdapter(recipeAdapter);
         }
     }

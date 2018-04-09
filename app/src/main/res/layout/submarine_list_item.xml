@@ -25,7 +25,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:textColor="#33CC33" />
+            android:textColor="@color/colorAqua" />
         <TextView
             android:id="@+id/bottomtext"
             android:layout_width="fill_parent"
@@ -36,7 +36,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorBrightBlue"
             android:text="Medium Text"/>
         <!--<Button
             android:id="@+id/btnListItem"
