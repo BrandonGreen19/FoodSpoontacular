@@ -10,7 +10,7 @@
         android:label="Spoon-Feed Recipes"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/GardenTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,8 @@
         <activity android:name=".DetailActivity" />
         <activity android:name=".AppDatabaseActivity" />
         <activity android:name=".DbListActivity" />
-        <activity android:name=".DbDetailsActivity"></activity>
+        <activity android:name=".DbDetailsActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

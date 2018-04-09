@@ -2,9 +2,12 @@ package com.example.foodspoontacular;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +27,10 @@ import okhttp3.Response;
 // GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML
 // private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
 
+//todo edit sharepref and reload with resultok and put these elsewhere
+//                setTheme(R.style.GardenTheme);
+//                tvJoke.setBackgroundResource(R.drawable.rounded_corner_red);
+
 public class MainActivity extends AppCompatActivity {
     private final String JOKE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
     private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
@@ -34,12 +41,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
+
 
         tvJoke = findViewById(R.id.tvJoke);
         etQuery = findViewById(R.id.etQuery);
         btnSearch = findViewById(R.id.btnSearch);
         btnDb = findViewById(R.id.btnDb);
+
+
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,13 +69,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DbListActivity.class);
-                startActivityForResult(intent, 0);
+                startActivity(intent);
             }
         });
 
         OkHttpHandler okHttpHandler= new OkHttpHandler();
+
 //        uncomment for joke
-        okHttpHandler.execute(JOKE_URL);
+//        okHttpHandler.execute(JOKE_URL);
+
+    }//oncreate
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mnuSettings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public class OkHttpHandler extends AsyncTask {
