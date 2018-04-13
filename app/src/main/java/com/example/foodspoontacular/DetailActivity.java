@@ -30,6 +30,7 @@ public class DetailActivity extends AppCompatActivity {
     private String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
     //690978/information
     String category = "";
+    String theme;
     private AppDatabase db;
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnSave;
@@ -51,6 +52,10 @@ public class DetailActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+                break;
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
         }
 
         setContentView(R.layout.activity_detail);
@@ -85,6 +90,12 @@ public class DetailActivity extends AppCompatActivity {
                 tvTitle.setBackgroundResource(R.drawable.rounded_corner_aqua);
                 tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_blue);
                 tvInstructions.setBackgroundResource(R.drawable.rounded_corner_bright_blue);
+                break;
+            case "monochrome":
+                tvTitle.setBackgroundResource(R.drawable.rounded_corner_grey);
+                tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_grey);
+                tvInstructions.setBackgroundResource(R.drawable.rounded_corner_grey);
+                break;
         }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +138,17 @@ public class DetailActivity extends AppCompatActivity {
         okHttpHandler.execute(url);
 
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode == Activity.RESULT_OK) {
+//            theme = data.getStringExtra("theme");
+//            this.recreate();
+//        } else {
+//            Toast.makeText(DetailActivity.this, "I lost your data...",Toast.LENGTH_LONG);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

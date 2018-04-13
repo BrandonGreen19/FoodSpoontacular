@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+                break;
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
         }
         setContentView(R.layout.activity_main);
 
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         etQuery = findViewById(R.id.etQuery);
         btnSearch = findViewById(R.id.btnSearch);
         btnDb = findViewById(R.id.btnDb);
-        tvJoke.setText(theme);
+//        tvJoke.setText(theme);
 
         switch(theme)
         {
@@ -69,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 tvJoke.setBackgroundResource(R.drawable.rounded_corner_aqua);
+                break;
+            case "monochrome":
+                tvJoke.setBackgroundResource(R.drawable.rounded_corner_light_grey);
                 break;
         }
 
@@ -101,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpHandler okHttpHandler= new OkHttpHandler();
 
 //        uncomment for joke
-//        okHttpHandler.execute(JOKE_URL);
+        okHttpHandler.execute(JOKE_URL);
 
     }//oncreate
 
@@ -112,13 +119,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK) {
             theme = data.getStringExtra("theme");
-            finish();
-            startActivity(getIntent());
+            this.recreate();
+//            finish();
+//            startActivity(getIntent());
         } else {
             Toast.makeText(MainActivity.this, "I lost your data...",Toast.LENGTH_LONG);
         }
-
-
     }
 
     @Override

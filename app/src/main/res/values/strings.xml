@@ -2,7 +2,9 @@
     <string name="app_name">FoodSpoontacular</string>
 
     <string-array name="themes">
+        <item>Select Theme:</item>
         <item>garden</item>
         <item>submarine</item>
+        <item>monochrome</item>
     </string-array>
 </resources>

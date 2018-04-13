@@ -19,6 +19,22 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPreferences = getSharedPreferences("general", 0);
+        String theme = sharedPreferences.getString("theme", "garden");
+
+        switch(theme)
+        {
+            case "garden":
+                setTheme(R.style.GardenTheme);
+                break;
+            case "submarine":
+                setTheme(R.style.SubmarineTheme);
+                break;
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
+        }
         setContentView(R.layout.activity_settings);
 
         Spinner spTheme = findViewById(R.id.spTheme);
@@ -37,20 +53,35 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             case "submarine":
                 themeInt = 1;
                 break;
+            case "monochrome":
+                themeInt = 2;
+                break;
         }
 
-        spTheme.setSelection(themeInt);
+        spTheme.setSelection(0);
     }
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Toast.makeText(this, parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
-        editor.putString("theme", parent.getItemAtPosition(pos).toString());
-        editor.commit();
 
-        Intent dataIntent = new Intent();
-        dataIntent.putExtra("theme", theme);
-        setResult(Activity.RESULT_OK, dataIntent);
+        if (!parent.getItemAtPosition(pos).toString().equals("Select Theme:")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Toast.makeText(this, parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+            editor.putString("theme", parent.getItemAtPosition(pos).toString());
+            editor.commit();
+
+            Intent dataIntent = new Intent(SettingsActivity.this, MainActivity.class);
+            //TODO find a home for this
+            //thanks Jean:
+            //this.recreate();
+            //need to fix auto select of spinner
+            dataIntent.putExtra("theme", theme);
+            setResult(Activity.RESULT_OK, dataIntent);
+//            recreate();
+//            onBackPressed();
+
+            dataIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(dataIntent);
+        }
 
     }
 

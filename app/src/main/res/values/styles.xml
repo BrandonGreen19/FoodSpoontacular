@@ -38,4 +38,22 @@
         <item name="android:buttonStyle">@style/navyButton</item>
     </style>
 
+    <style name="greyButton" parent="android:Widget.Button.Small">
+        <item name="android:background">@drawable/rounded_corner_grey</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="MonochromeTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorGrey</item>
+        <item name="colorPrimaryDark">@color/colorDarkGrey</item>
+        <item name="colorAccent">@color/colorOtherGrey</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:editTextBackground">@drawable/rounded_corner_white</item>
+        <item name="android:editTextColor">@color/colorBlack</item>
+        <item name="android:buttonStyle">@style/greyButton</item>
+    </style>
+
 </resources>

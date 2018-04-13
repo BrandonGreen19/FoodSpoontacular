@@ -56,6 +56,10 @@ public class ListActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+                break;
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
         }
 
         setContentView(R.layout.activity_list);
@@ -72,6 +76,19 @@ public class ListActivity extends AppCompatActivity {
         okHttpHandler.execute(query);
 
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode == Activity.RESULT_OK) {
+//            theme = data.getStringExtra("theme");
+//            this.recreate();
+//        } else {
+//            Toast.makeText(ListActivity.this, "I lost your data...",Toast.LENGTH_LONG);
+//        }
+//    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,6 +135,9 @@ public class ListActivity extends AppCompatActivity {
                         break;
                     case "submarine":
                         v = vi.inflate(R.layout.submarine_list_item, null, true);
+                        break;
+                    case "monochrome":
+                        v = vi.inflate(R.layout.monochrome_list_item, null, true);
                         break;
                 }
 

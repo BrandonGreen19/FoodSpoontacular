@@ -48,6 +48,9 @@ public class DbListActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
         }
 
         setContentView(R.layout.activity_db_list);
@@ -84,6 +87,17 @@ public class DbListActivity extends AppCompatActivity {
         this.setTitle("My Recipes");
         super.onResume();
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode == Activity.RESULT_OK) {
+//            theme = data.getStringExtra("theme");
+//            this.recreate();
+//        } else {
+//            Toast.makeText(DbListActivity.this, "I lost your data...",Toast.LENGTH_LONG);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,6 +164,9 @@ public class DbListActivity extends AppCompatActivity {
                         break;
                     case "submarine":
                         v = vi.inflate(R.layout.submarine_list_item, null, true);
+                        break;
+                    case "monochrome":
+                        v = vi.inflate(R.layout.monochrome_list_item, null, true);
                         break;
                 }
                 vh = new ViewHolder(v);

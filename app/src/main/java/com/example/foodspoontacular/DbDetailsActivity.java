@@ -21,6 +21,7 @@ public class DbDetailsActivity extends AppCompatActivity {
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnDelete;
     private SharedPreferences sharedPreferences;
+    String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,9 @@ public class DbDetailsActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+            case "monochrome":
+                setTheme(R.style.MonochromeTheme);
+                break;
         }
 
         setContentView(R.layout.activity_db_details);
@@ -76,6 +80,11 @@ public class DbDetailsActivity extends AppCompatActivity {
                 tvTitle.setBackgroundResource(R.drawable.rounded_corner_aqua);
                 tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_blue);
                 tvInstructions.setBackgroundResource(R.drawable.rounded_corner_bright_blue);
+            case "monochrome":
+                tvTitle.setBackgroundResource(R.drawable.rounded_corner_grey);
+                tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_grey);
+                tvInstructions.setBackgroundResource(R.drawable.rounded_corner_grey);
+                break;
         }
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +106,17 @@ public class DbDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode == Activity.RESULT_OK) {
+//            theme = data.getStringExtra("theme");
+//            this.recreate();
+//        } else {
+//            Toast.makeText(DbDetailsActivity.this, "I lost your data...",Toast.LENGTH_LONG);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,7 +162,7 @@ public class DbDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            finish();
+            recreate();
 //            Intent intent = new Intent(DbDetailsActivity.this, DbListActivity.class);
 //            startActivity(intent);
 
