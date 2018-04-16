@@ -11,24 +11,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-//https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/324694/analyzedInstructions?stepBreakdown=false
 
 public class DbDetailsActivity extends AppCompatActivity {
 
-//    private String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
-//    //690978/information
     private AppDatabase db;
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnDelete;
     private SharedPreferences sharedPreferences;
-    String theme;
+    private String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sharedPreferences = getSharedPreferences("general", 0);
-        String theme = sharedPreferences.getString("theme", "garden");
+        theme = sharedPreferences.getString("theme", "garden");
 
         switch(theme)
         {
@@ -37,14 +34,13 @@ public class DbDetailsActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+                break;
             case "monochrome":
                 setTheme(R.style.MonochromeTheme);
                 break;
         }
 
         setContentView(R.layout.activity_db_details);
-
-
 
         db = AppDatabase.getDatabaseInstance(this);
 
@@ -80,6 +76,7 @@ public class DbDetailsActivity extends AppCompatActivity {
                 tvTitle.setBackgroundResource(R.drawable.rounded_corner_aqua);
                 tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_blue);
                 tvInstructions.setBackgroundResource(R.drawable.rounded_corner_bright_blue);
+                break;
             case "monochrome":
                 tvTitle.setBackgroundResource(R.drawable.rounded_corner_grey);
                 tvIngredients.setBackgroundResource(R.drawable.rounded_corner_light_grey);
@@ -102,21 +99,9 @@ public class DbDetailsActivity extends AppCompatActivity {
 
         DeleteDbRecipeTask newDeleteDbRecipeTask = new DeleteDbRecipeTask(recipeToDelete);
         newDeleteDbRecipeTask.execute();
-
             }
         });
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(resultCode == Activity.RESULT_OK) {
-//            theme = data.getStringExtra("theme");
-//            this.recreate();
-//        } else {
-//            Toast.makeText(DbDetailsActivity.this, "I lost your data...",Toast.LENGTH_LONG);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,8 +118,6 @@ public class DbDetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(DbDetailsActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -155,7 +138,6 @@ public class DbDetailsActivity extends AppCompatActivity {
         {
             db.dbRecipeDao().delete(dbRecipe);
             finish();
-
             return null;
         }
 
@@ -163,10 +145,6 @@ public class DbDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             recreate();
-//            Intent intent = new Intent(DbDetailsActivity.this, DbListActivity.class);
-//            startActivity(intent);
-
-//            DbDetailsActivity.this.onBackPressed();
         }
     }
 }

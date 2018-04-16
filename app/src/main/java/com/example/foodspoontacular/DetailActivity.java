@@ -23,14 +23,12 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-//https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/324694/analyzedInstructions?stepBreakdown=false
 
 public class DetailActivity extends AppCompatActivity {
 
-    private String url = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
-    //690978/information
+    private String url = getString(R.string.detail_url);
     String category = "";
-    String theme;
+    String theme, key;
     private AppDatabase db;
     private TextView tvIngredients, tvInstructions, tvTitle;
     private Button btnSave;
@@ -41,9 +39,9 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         sharedPreferences = getSharedPreferences("general", 0);
-        String theme = sharedPreferences.getString("theme", "garden");
+        theme = sharedPreferences.getString("theme", "garden");
+        key = sharedPreferences.getString("key", getString(R.string.mashape_key));
 
         switch(theme)
         {
@@ -60,7 +58,7 @@ public class DetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_detail);
 
-
+        //CREDIT to John for ROOM demo
         db = AppDatabase.getDatabaseInstance(this);
 
         Intent i = getIntent();
@@ -72,12 +70,10 @@ public class DetailActivity extends AppCompatActivity {
 
         this.setTitle(title);
 
-
         tvIngredients = findViewById(R.id.tvIngredients);
         tvInstructions = findViewById(R.id.tvInstructions);
         tvTitle = findViewById(R.id.tvTitle);
         btnSave = findViewById(R.id.btnSave);
-
 
         switch(theme)
         {
@@ -111,20 +107,6 @@ public class DetailActivity extends AppCompatActivity {
                                                 title,
                                                 image);
 
-//                    newCategory = db.categoryDao().findCategoryByName(category);
-//
-//                if (db.categoryDao().findCategoryByName(category) == null)
-//                {
-//                    CreateNewCategoryTask newCategoryTask = new CreateNewCategoryTask(newCategory);
-//                    newCategoryTask.execute();
-//                    Category dbCat = db.categoryDao().findCategoryByName(category);
-//                }
-//                else
-//                {
-//                    newRecipe.setCategoryId(dbCat.getCategoryId());
-//                }
-
-
                 CreateNewDbRecipeTask newDbRecipeTask = new CreateNewDbRecipeTask(newRecipe);
                 newDbRecipeTask.execute();
                 Toast.makeText(DetailActivity.this, "Recipe Saved!", Toast.LENGTH_LONG).show();
@@ -133,22 +115,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-
-
         okHttpHandler.execute(url);
-
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(resultCode == Activity.RESULT_OK) {
-//            theme = data.getStringExtra("theme");
-//            this.recreate();
-//        } else {
-//            Toast.makeText(DetailActivity.this, "I lost your data...",Toast.LENGTH_LONG);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,8 +133,6 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(DetailActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -183,15 +149,10 @@ public class DetailActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url(url)
-                    ////mashape key
-                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
-                    ////rapidAPI key
-                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
+                    .url(params[0].toString())
+                    .header(getString(R.string.header_name), key)
                     .addHeader("Accept", "application/json")
                     .build();
-
-
             try {
                 response = client.newCall(request).execute();
                 //Log.d("brandon", "doinback: " + response.body().string());
@@ -199,10 +160,8 @@ public class DetailActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
             }
-
             return null;
         }
-
 
         @Override
         protected void onPostExecute(Object o) {
@@ -210,9 +169,6 @@ public class DetailActivity extends AppCompatActivity {
             parseResponse(o.toString());
         }
     }
-
-
-
 
     private void parseResponse(String response) {
         try{
@@ -223,7 +179,6 @@ public class DetailActivity extends AppCompatActivity {
             instructions = instructions.replace("</p>", " ");
             JSONArray ingredients = json.getJSONArray("extendedIngredients");
             String ingredientString = "";
-
 
             Log.d("brandon", "dishTypes: " + dishTypes.isNull(0));
             if (dishTypes.isNull(0))
@@ -276,19 +231,12 @@ public class DetailActivity extends AppCompatActivity {
                 newCategory = new Category(category);
                 CreateNewCategoryTask newCategoryTask = new CreateNewCategoryTask(newCategory, dbRecipe);
                 newCategoryTask.execute();
-//                Category dbCat = db.categoryDao().findCategoryByName(category);
             }
             else
             {
                 dbRecipe.setCategoryId(newCategory.getCategoryId());
                 db.dbRecipeDao().insertAll(dbRecipe);
             }
-
-            //newCategory = db.categoryDao().findCategoryByName(category);
-
-//            dbRecipe.setCategoryId(newCategory.getCategoryId());
-//            db.dbRecipeDao().insertAll(dbRecipe);
-            //startActivity(new Intent(getApplicationContext(),DbListActivity.class));
             finish();
             return null;
         }
@@ -319,7 +267,6 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             Intent intent = new Intent(DetailActivity.this, DbListActivity.class);
             startActivity(intent);
         }

@@ -24,16 +24,16 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-// mashape key
-// HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd
-// rapidAPI key
-// GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML
-// private final String SEARCH_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=burger";
+
+//MUST DO
+//SHOULD DO
+//TODO fix dropdown theme
+//TODO make more search fields
+//ONE DAY
+//TODO sign up for key page
 
 public class MainActivity extends AppCompatActivity {
-    private final String JOKE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random";
-    private String queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
-    private String theme;
+    private String queryUrl, jokeUrl, theme, key;
     private TextView tvJoke;
     private EditText etQuery;
     private Button btnSearch, btnDb;
@@ -43,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        queryUrl = getString(R.string.query_url);
+        jokeUrl = getString(R.string.joke_url);
+
         sharedPreferences = getSharedPreferences("general", 0);
-        String theme = sharedPreferences.getString("theme", "garden");
+        key = sharedPreferences.getString("key", getString(R.string.mashape_key));
+        theme = sharedPreferences.getString("theme", "garden");
 
         switch(theme)
         {
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         etQuery = findViewById(R.id.etQuery);
         btnSearch = findViewById(R.id.btnSearch);
         btnDb = findViewById(R.id.btnDb);
-//        tvJoke.setText(theme);
 
         switch(theme)
         {
@@ -79,17 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        tvJoke = findViewById(R.id.tvJoke);
-        etQuery = findViewById(R.id.etQuery);
-        btnSearch = findViewById(R.id.btnSearch);
-        btnDb = findViewById(R.id.btnDb);
-
-
-
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queryUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=";
+                queryUrl = getString(R.string.query_url);
                 queryUrl += etQuery.getText();
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 intent.putExtra("query", queryUrl);
@@ -105,10 +101,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //CREDIT to Allison for her OkHttp demo, used throughout
         OkHttpHandler okHttpHandler= new OkHttpHandler();
 
 //        uncomment for joke
-        okHttpHandler.execute(JOKE_URL);
+        okHttpHandler.execute(jokeUrl);
 
     }//oncreate
 
@@ -120,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == Activity.RESULT_OK) {
             theme = data.getStringExtra("theme");
             this.recreate();
-//            finish();
-//            startActivity(getIntent());
         } else {
             Toast.makeText(MainActivity.this, "I lost your data...",Toast.LENGTH_LONG);
         }
@@ -142,8 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -159,27 +152,18 @@ public class MainActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
-                    //mashape key
-                    .header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
-                    ////rapidAPI key
-//                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
+                    .header(getString(R.string.header_name), key)
                     .addHeader("Accept", "application/json")
                     .build();
 
-
             try {
-
                 response = client.newCall(request).execute();
                 return response.body().string();
-                //Log.d("brandon", "doinback: " + response.body().string());
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
-
             }
-
             return null;
         }
-
 
         @Override
         protected void onPostExecute(Object o) {
@@ -191,11 +175,9 @@ public class MainActivity extends AppCompatActivity {
     private void parseResponse(String response) {
         try{
             JSONObject json = new JSONObject(response);
-            //Log.d("brandon", "answer: " + json.getString("text"));
             tvJoke.setText(json.getString("text"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 }

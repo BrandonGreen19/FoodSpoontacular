@@ -16,9 +16,7 @@
         <item name="android:editTextBackground">@drawable/rounded_corner_light_green</item>
         <item name="android:buttonStyle">@style/almondButton</item>
         <item name="android:editTextColor">@color/colorText</item>
-
     </style>
-
 
     <style name="navyButton" parent="android:Widget.Button.Small">
         <item name="android:background">@drawable/rounded_corner_navy</item>

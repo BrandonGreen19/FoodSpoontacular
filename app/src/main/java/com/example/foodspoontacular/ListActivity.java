@@ -39,15 +39,15 @@ public class ListActivity extends AppCompatActivity {
     private RecipeAdapter recipeAdapter;
     OkHttpHandler okHttpHandler = new OkHttpHandler();
     private SharedPreferences sharedPreferences;
-    private String theme;
+    private String theme, key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         sharedPreferences = getSharedPreferences("general", 0);
         theme = sharedPreferences.getString("theme", "garden");
+        key = sharedPreferences.getString("key", getString(R.string.mashape_key));
 
         switch(theme)
         {
@@ -74,21 +74,7 @@ public class ListActivity extends AppCompatActivity {
         recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.garden_list_item, recipes);
         listView.setAdapter(recipeAdapter);
         okHttpHandler.execute(query);
-
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(resultCode == Activity.RESULT_OK) {
-//            theme = data.getStringExtra("theme");
-//            this.recreate();
-//        } else {
-//            Toast.makeText(ListActivity.this, "I lost your data...",Toast.LENGTH_LONG);
-//        }
-//    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,8 +91,6 @@ public class ListActivity extends AppCompatActivity {
                 Intent intent = new Intent(ListActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -140,7 +124,6 @@ public class ListActivity extends AppCompatActivity {
                         v = vi.inflate(R.layout.monochrome_list_item, null, true);
                         break;
                 }
-
                 vh = new ViewHolder(v);
                 v.setTag(vh);
             }else {
@@ -158,14 +141,11 @@ public class ListActivity extends AppCompatActivity {
                     bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes!");
                 }
                 if (imageView != null){
-                    // Loads the image via url into the image view
-                    //Picasso.get().load(o.getImage()).into(vh.imageView);
                     Picasso.get().load(o.getImage()).fit().into(vh.imageView);
                 }
             }
             return v;
         }
-
 
         class ViewHolder {
             TextView topText;
@@ -176,10 +156,8 @@ public class ListActivity extends AppCompatActivity {
                 this.topText = v.findViewById(R.id.toptext);
                 this.bottomText = v.findViewById(R.id.bottomtext);
                 this.imageView = v.findViewById(R.id.imageView);
-
             }
         }
-
     }
 
 
@@ -209,9 +187,7 @@ public class ListActivity extends AppCompatActivity {
         public String getImage() {
             return image;
         }
-
     }
-
 
     public class OkHttpHandler extends AsyncTask {
         OkHttpClient client = new OkHttpClient();
@@ -224,25 +200,17 @@ public class ListActivity extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .url(params[0].toString())
-                    ////mashape key
-                    //.header("X-Mashape-Key", "HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd")
-                    ////rapidAPI key
-                    .header("X-Mashape-Key", "GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML")
+                    .header(getString(R.string.header_name), key)
                     .addHeader("Accept", "application/json")
                     .build();
-
-
             try {
                 response = client.newCall(request).execute();
-                //Log.d("brandon", "doinback: " + response.body().string());
                 return response.body().string();
             } catch (IOException e) {
                 Log.e("brandon", "IOException in doInBackground(): " + e.getMessage());
             }
-
             return null;
         }
-
 
         @Override
         protected void onPostExecute(Object o) {
@@ -263,7 +231,6 @@ public class ListActivity extends AppCompatActivity {
 
             parseResponse(o.toString());
             listView.setAdapter(recipeAdapter);
-
         }
     }
 
@@ -271,7 +238,6 @@ public class ListActivity extends AppCompatActivity {
         try{
             JSONObject json = new JSONObject(response);
             JSONArray jsonResults = json.getJSONArray("results");
-//            Log.d("brandon", "answer: " + jsonResults.get);
             recipes = new ArrayList<Recipe>();
 
             for (int i=0;i<jsonResults.length();i++)
@@ -281,12 +247,11 @@ public class ListActivity extends AppCompatActivity {
                 String id =  c.getString("id");
                 String title =  c.getString("title");
                 String readyInMinutes =  c.getString("readyInMinutes");
-                String image =  "https://spoonacular.com/recipeImages/" + c.getString("image");
+                String image =  getString(R.string.image_path) + c.getString("image");
 
                 Recipe recipe = new Recipe (Integer.parseInt(id), title, readyInMinutes, image);
 
                 recipes.add(recipe);
-
                 recipeAdapter = new RecipeAdapter(ListActivity.this, R.layout.garden_list_item, recipes);
                 listView.setAdapter(recipeAdapter);
             }
@@ -295,7 +260,6 @@ public class ListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }
 
 

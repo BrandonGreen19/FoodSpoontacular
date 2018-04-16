@@ -24,7 +24,8 @@
 
     <item
         android:id="@+id/mnuSettings"
-        android:title="Settings"/>
+        android:title="Settings"
+        android:background="@color/colorLightGreen"/>
 
     <!--<item-->
         <!--android:id="@+id/mnuB"-->

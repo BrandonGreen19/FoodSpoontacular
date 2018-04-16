@@ -8,20 +8,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private SharedPreferences sharedPreferences;
-    String theme;
+    private CheckBox cbRapid;
+    String theme, key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sharedPreferences = getSharedPreferences("general", 0);
-        String theme = sharedPreferences.getString("theme", "garden");
+        theme = sharedPreferences.getString("theme", "garden");
+        key = sharedPreferences.getString("key", getString(R.string.mashape_key));
 
         switch(theme)
         {
@@ -43,7 +47,32 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         spTheme.setAdapter(adapter);
         spTheme.setOnItemSelectedListener(this);
 
+        cbRapid = findViewById(R.id.cbRapid);
+
+        if (key.equals(getString(R.string.rapid_key)))
+        {
+            cbRapid.setChecked(true);
+        }
+
+        cbRapid.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("key", getString(R.string.rapid_key));
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("key", getString(R.string.mashape_key));
+                    editor.commit();
+                }
+            }
+        });
+
         sharedPreferences = getSharedPreferences("general", 0);
+
+
+
         theme = sharedPreferences.getString("theme", "garden");
         int themeInt = 0;
         switch(theme){
@@ -70,7 +99,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             editor.commit();
 
             Intent dataIntent = new Intent(SettingsActivity.this, MainActivity.class);
-            //TODO find a home for this
             //thanks Jean:
             //this.recreate();
             //need to fix auto select of spinner

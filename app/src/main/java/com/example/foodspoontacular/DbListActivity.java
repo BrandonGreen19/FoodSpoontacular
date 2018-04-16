@@ -48,14 +48,12 @@ public class DbListActivity extends AppCompatActivity {
                 break;
             case "submarine":
                 setTheme(R.style.SubmarineTheme);
+                break;
             case "monochrome":
                 setTheme(R.style.MonochromeTheme);
                 break;
         }
-
         setContentView(R.layout.activity_db_list);
-
-
     }
 
     @Override
@@ -79,25 +77,11 @@ public class DbListActivity extends AppCompatActivity {
             }
         });
 
-
-
-//        recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.garden_list_item, dbRecipes);
         FetchAllDbRecipesTask fetchAllDbRecipesTask = new FetchAllDbRecipesTask();
         fetchAllDbRecipesTask.execute();
         this.setTitle("My Recipes");
         super.onResume();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(resultCode == Activity.RESULT_OK) {
-//            theme = data.getStringExtra("theme");
-//            this.recreate();
-//        } else {
-//            Toast.makeText(DbListActivity.this, "I lost your data...",Toast.LENGTH_LONG);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,29 +98,10 @@ public class DbListActivity extends AppCompatActivity {
                 Intent intent = new Intent(DbListActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, 0);
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    //    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId())
-//        {
-//            case R.id.newUser:
-//                startActivity(new Intent(getApplicationContext(),newUserActivity.class));
-//                break;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu,menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     private class RecipeAdapter extends ArrayAdapter<DbRecipe>
     {
@@ -149,7 +114,6 @@ public class DbListActivity extends AppCompatActivity {
             this.textViewResourceId = textViewResourceId;
             this.dbRecipes = dbRecipes;
         }
-
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -181,9 +145,6 @@ public class DbListActivity extends AppCompatActivity {
                 TextView bt = (TextView) v.findViewById(R.id.bottomtext);
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
                 categoryId = o.getCategoryId();
-//                FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
-//                findCategoryByIdTask.execute();
-
 
                 if (tt != null) {
                     tt.setText(o.getTitle());
@@ -192,13 +153,11 @@ public class DbListActivity extends AppCompatActivity {
                     bt.setText("Ready in: " + o.getReadyInMinutes() + "minutes! - " + c.getName());
                 }
                 if (imageView != null){
-                    // Loads the image via url into the image view
                     Picasso.get().load(o.getImage()).fit().into(vh.imageView);
                 }
             }
             return v;
         }
-
 
         class ViewHolder {
             TextView topText;
@@ -209,7 +168,6 @@ public class DbListActivity extends AppCompatActivity {
                 this.topText = v.findViewById(R.id.toptext);
                 this.bottomText = v.findViewById(R.id.bottomtext);
                 this.imageView = v.findViewById(R.id.imageView);
-
             }
         }
     }
@@ -227,7 +185,6 @@ public class DbListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //list.setAdapter(recipeAdapter);
             recipeAdapter = new RecipeAdapter(getApplicationContext(),R.layout.garden_list_item, dbRecipes);
             FindCategoryByIdTask findCategoryByIdTask = new FindCategoryByIdTask();
             findCategoryByIdTask.execute();

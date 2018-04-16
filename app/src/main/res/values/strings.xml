@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodSpoontacular</string>
+    <string name="app_name">Spoon-Feed Recipes</string>
 
     <string-array name="themes">
         <item>Select Theme:</item>
@@ -7,4 +7,14 @@
         <item>submarine</item>
         <item>monochrome</item>
     </string-array>
+
+    <string name="mashape_key">HJhThtEW8nmshKXO1WtYtwgsjYHPp1WaJb7jsnLexFfLulxSTd</string>
+    <string name="rapid_key">GRqwZUoWJemshcH1NJ5pslMz5MmLp1Hw3HwjsnIigeMCVeJOML</string>
+
+    <string name="joke_url">https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/jokes/random</string>
+    <string name="query_url"><![CDATA[https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=false&limitLicense=false&number=10&offset=0&query=]]></string>
+    <string name="header_name">X-Mashape-Key</string>
+    <string name="image_path">https://spoonacular.com/recipeImages/</string>
+    <string name="detail_url">https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/</string>
+
 </resources>
