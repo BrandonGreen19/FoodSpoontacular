@@ -26,7 +26,7 @@ import okhttp3.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private String url = getString(R.string.detail_url);
+    private String url;
     String category = "";
     String theme, key;
     private AppDatabase db;
@@ -39,6 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        url = getString(R.string.detail_url);
         sharedPreferences = getSharedPreferences("general", 0);
         theme = sharedPreferences.getString("theme", "garden");
         key = sharedPreferences.getString("key", getString(R.string.mashape_key));
