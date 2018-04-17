@@ -29,8 +29,17 @@ import okhttp3.Response;
 //SHOULD DO
 //TODO fix dropdown theme
 //TODO make more search fields
+//TODO rate recipes
 //ONE DAY
 //TODO sign up for key page
+//TODO add adds
+//TODO add free version
+
+//Hi Jody,
+//just wanted to thank you for a great term, I really enjoyed your class and your laid back style.
+//here's a link to my git hub in case something horrible happens.
+
+//https://github.com/BrandonGreen19/FoodSpoontacular
 
 public class MainActivity extends AppCompatActivity {
     private String queryUrl, jokeUrl, theme, key;
@@ -104,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
         //CREDIT to Allison for her OkHttp demo, used throughout
         OkHttpHandler okHttpHandler= new OkHttpHandler();
 
-//        uncomment for joke
         okHttpHandler.execute(jokeUrl);
-
     }//oncreate
 
 
